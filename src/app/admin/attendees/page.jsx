@@ -158,28 +158,28 @@ export default function AttendeesAdminPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white border-l-4 border-blue-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Total Expected Entries</p>
-          <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-display font-bold text-gray-900">{stats.totalExpected}</h3>
-            <p className="text-sm text-gray-400 mb-1">People</p>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+        <Card className="bg-white border-l-4 border-blue-500 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Expected</p>
+          <div className="flex items-end gap-2 md:gap-3">
+            <h3 className="text-2xl md:text-4xl font-display font-bold text-gray-900">{stats.totalExpected}</h3>
+            <p className="text-[10px] md:text-sm text-gray-400 mb-1">People</p>
           </div>
         </Card>
 
-        <Card className="bg-white border-l-4 border-green-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Inside Venue</p>
-          <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-display font-bold text-green-600">{stats.insideNow}</h3>
-            <p className="text-sm text-gray-400 mb-1">Scanned & Entered</p>
+        <Card className="bg-white border-l-4 border-green-500 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Inside Venue</p>
+          <div className="flex items-end gap-2 md:gap-3">
+            <h3 className="text-2xl md:text-4xl font-display font-bold text-green-600">{stats.insideNow}</h3>
+            <p className="text-[10px] md:text-sm text-gray-400 mb-1">Entered</p>
           </div>
         </Card>
         
-        <Card className="bg-white border-l-4 border-orange-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Yet to Arrive</p>
-          <div className="flex items-end gap-3">
-            <h3 className="text-4xl font-display font-bold text-orange-500">{stats.pending}</h3>
-            <p className="text-sm text-gray-400 mb-1">Pending Check-in</p>
+        <Card className="bg-white border-l-4 border-orange-500 p-4 md:p-6 shadow-sm col-span-2 md:col-span-1">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Yet to Arrive</p>
+          <div className="flex items-end gap-2 md:gap-3">
+            <h3 className="text-2xl md:text-4xl font-display font-bold text-orange-500">{stats.pending}</h3>
+            <p className="text-[10px] md:text-sm text-gray-400 mb-1">Pending</p>
           </div>
         </Card>
       </div>

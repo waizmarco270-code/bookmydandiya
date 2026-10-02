@@ -96,28 +96,28 @@ export default function TicketsAdminPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white border-l-4 border-gray-800 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Total Tickets Issued</p>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+        <Card className="bg-white border-l-4 border-gray-800 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Total Issued</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">{stats.total}</h3>
-            <Ticket className="text-gray-400 mb-1" size={24} />
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900">{stats.total}</h3>
+            <Ticket className="text-gray-400 mb-1 w-5 h-5 md:w-6 md:h-6" />
           </div>
         </Card>
         
-        <Card className="bg-white border-l-4 border-green-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Active / Valid Tickets</p>
+        <Card className="bg-white border-l-4 border-green-500 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Active / Valid</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">{stats.active}</h3>
-            <Activity className="text-green-500 mb-1" size={24} />
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900">{stats.active}</h3>
+            <Activity className="text-green-500 mb-1 w-5 h-5 md:w-6 md:h-6" />
           </div>
         </Card>
         
-        <Card className="bg-white border-l-4 border-red-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Exhausted / Used Up</p>
+        <Card className="bg-white border-l-4 border-red-500 p-4 md:p-6 shadow-sm col-span-2 md:col-span-1">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Exhausted</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">{stats.exhausted}</h3>
-            <UserX className="text-red-500 mb-1" size={24} />
+            <h3 className="text-2xl md:text-3xl font-display font-bold text-gray-900">{stats.exhausted}</h3>
+            <UserX className="text-red-500 mb-1 w-5 h-5 md:w-6 md:h-6" />
           </div>
         </Card>
       </div>

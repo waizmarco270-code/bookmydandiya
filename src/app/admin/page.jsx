@@ -86,52 +86,52 @@ export default function AdminDashboard() {
   }
 
   const StatCard = ({ title, value, subtext, icon, colorClass }) => (
-    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-start justify-between">
+    <div className="bg-white rounded-2xl p-4 md:p-5 shadow-sm border border-gray-100 flex items-center justify-between">
       <div>
-        <p className="text-sm text-gray-500 font-medium mb-1">{title}</p>
-        <h4 className="text-3xl font-display font-bold text-gray-900">{value}</h4>
-        {subtext && <p className="text-xs text-gray-400 mt-2">{subtext}</p>}
+        <p className="text-xs md:text-sm text-gray-500 font-medium mb-0.5">{title}</p>
+        <h4 className="text-xl md:text-3xl font-display font-bold text-gray-900">{value}</h4>
+        {subtext && <p className="text-[10px] md:text-xs text-gray-400 mt-1">{subtext}</p>}
       </div>
-      <div className={`p-3 rounded-xl ${colorClass}`}>
+      <div className={`p-2 md:p-3 rounded-xl ${colorClass}`}>
         {icon}
       </div>
     </div>
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="mb-8">
-        <h1 className="text-2xl md:text-3xl font-display font-bold text-brand-dark">Event Dashboard</h1>
-        <p className="text-gray-500">Live metrics for Grand Dandiya Raas</p>
+    <div className="max-w-6xl mx-auto space-y-4 md:space-y-6">
+      <div className="mb-4 md:mb-8">
+        <h1 className="text-xl md:text-3xl font-display font-bold text-brand-dark">Event Dashboard</h1>
+        <p className="text-xs md:text-sm text-gray-500">Live metrics for Grand Dandiya Raas</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <StatCard 
           title="Total Revenue" 
           value={`₹${stats.revenue.confirmed.toLocaleString()}`} 
           subtext={`Expected: ₹${stats.revenue.totalExpected.toLocaleString()}`}
-          icon={<IndianRupee size={24} />} 
+          icon={<IndianRupee className="w-5 h-5 md:w-6 md:h-6" />} 
           colorClass="bg-green-100 text-green-700" 
         />
         <StatCard 
           title="Total Bookings" 
           value={stats.bookings.total} 
           subtext={`${stats.bookings.confirmed} Confirmed`}
-          icon={<FileText size={24} />} 
+          icon={<FileText className="w-5 h-5 md:w-6 md:h-6" />} 
           colorClass="bg-blue-100 text-blue-700" 
         />
         <StatCard 
           title="Attendees" 
           value={stats.attendees.confirmed} 
-          subtext={`Expected Total: ${stats.attendees.total}`}
-          icon={<Users size={24} />} 
+          subtext={`Expected: ${stats.attendees.total}`}
+          icon={<Users className="w-5 h-5 md:w-6 md:h-6" />} 
           colorClass="bg-purple-100 text-purple-700" 
         />
         <StatCard 
-          title="Pending Approvals" 
+          title="Pending" 
           value={stats.bookings.pending} 
           subtext={`${stats.bookings.rejected} Rejected`}
-          icon={<AlertCircle size={24} />} 
+          icon={<AlertCircle className="w-5 h-5 md:w-6 md:h-6" />} 
           colorClass="bg-orange-100 text-orange-700" 
         />
       </div>

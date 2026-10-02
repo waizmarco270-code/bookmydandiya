@@ -129,30 +129,30 @@ export default function PaymentsAdminPage() {
       </div>
 
       {/* Revenue Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-white border-l-4 border-orange-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Pending Verification</p>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+        <Card className="bg-white border-l-4 border-orange-500 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Pending</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">₹{stats.totalPending.toLocaleString()}</h3>
+            <h3 className="text-xl md:text-3xl font-display font-bold text-gray-900">₹{stats.totalPending.toLocaleString()}</h3>
             <div className="flex flex-col items-end">
-              <span className="text-xs font-bold text-white bg-orange-500 px-2 py-1 rounded-full">{stats.countPending} Apps</span>
+              <span className="text-[9px] md:text-xs font-bold text-white bg-orange-500 px-2 py-0.5 md:py-1 rounded-full">{stats.countPending} Apps</span>
             </div>
           </div>
         </Card>
 
-        <Card className="bg-white border-l-4 border-green-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Collected Revenue</p>
+        <Card className="bg-white border-l-4 border-green-500 p-4 md:p-6 shadow-sm">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Collected</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">₹{stats.totalCollected.toLocaleString()}</h3>
-            <TrendingUp className="text-green-500 mb-1" size={24} />
+            <h3 className="text-xl md:text-3xl font-display font-bold text-gray-900">₹{stats.totalCollected.toLocaleString()}</h3>
+            <TrendingUp className="text-green-500 mb-1 w-5 h-5 md:w-6 md:h-6" />
           </div>
         </Card>
         
-        <Card className="bg-white border-l-4 border-red-500 p-6 shadow-sm">
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Rejected Payments</p>
+        <Card className="bg-white border-l-4 border-red-500 p-4 md:p-6 shadow-sm col-span-2 md:col-span-1">
+          <p className="text-[10px] md:text-sm font-medium text-gray-500 uppercase tracking-wider mb-1">Rejected</p>
           <div className="flex justify-between items-end">
-            <h3 className="text-3xl font-display font-bold text-gray-900">₹{stats.totalRejected.toLocaleString()}</h3>
-            <AlertCircle className="text-red-500 mb-1" size={24} />
+            <h3 className="text-xl md:text-3xl font-display font-bold text-gray-900">₹{stats.totalRejected.toLocaleString()}</h3>
+            <AlertCircle className="text-red-500 mb-1 w-5 h-5 md:w-6 md:h-6" />
           </div>
         </Card>
       </div>
