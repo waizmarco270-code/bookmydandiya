@@ -291,8 +291,13 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                       whileTap={{ scale: 0.98 }}
                       key={pass.id}
                       onClick={() => { setSelectedPass(pass); setStep(2); }}
-                      className={`relative overflow-hidden rounded-2xl cursor-pointer bg-white border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 ${
+                      className={`relative overflow-hidden rounded-2xl cursor-pointer border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 ${
                         selectedPass.id === pass.id ? 'border-brand-maroon shadow-lg shadow-brand-maroon/10' : 'border-brand-dark/10 hover:border-brand-maroon/50 shadow-sm'
+                      } ${
+                        pass.id === 'single' ? 'bg-gradient-to-br from-[#FFFCF5] to-[#FDFBF7]' :
+                        pass.id === 'couple' ? 'bg-gradient-to-br from-[#FAF5F0] to-[#F8EFE6]' :
+                        pass.id === 'group' ? 'bg-gradient-to-br from-[#FCF8ED] to-[#F5EEDC]' :
+                        pass.id === 'child' ? 'bg-gradient-to-br from-[#FDF9F1] to-[#F5EFE6]' : 'bg-white'
                       }`}
                     >
                       {/* Left Side: Icon & Details */}
