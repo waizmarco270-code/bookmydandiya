@@ -159,7 +159,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
   };
 
   const handleNextStep = () => {
-    if (step === 1) {
+    if (step === 2) {
       if (!primaryDetails.name || !primaryDetails.phone || !primaryDetails.address) {
         toast.error("Please fill all primary details.");
         return;
@@ -172,12 +172,12 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
         toast.error("Mobile Number must be exactly 10 digits.");
         return;
       }
-      setStep(2);
-    } else if (step === 2) {
-      // Validation for attendees could go here
       setStep(3);
     } else if (step === 3) {
+      // Validation for attendees could go here
       setStep(4);
+    } else if (step === 4) {
+      setStep(5);
     }
   };
 
@@ -224,7 +224,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
       });
 
       setPaymentStatus('SUBMITTED');
-      setStep(5);
+      setStep(6);
     } catch (error) {
       console.error("Error saving booking:", error);
       toast.error("Failed to submit booking. Please try again.");
@@ -266,7 +266,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
           <div className="bg-brand-dark p-6 border-b border-brand-gold/30 flex justify-between items-center shrink-0">
             <div>
               <h3 className="font-display text-2xl text-brand-gold font-bold">Book Your Passes</h3>
-              <p className="text-brand-sand/70 text-sm">Step {step} of 4</p>
+              <p className="text-brand-sand/70 text-sm">Step {step > 5 ? 5 : step} of 5</p>
             </div>
             <button 
               onClick={onClose}
@@ -279,28 +279,52 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
           {/* Body */}
           <div className="flex-1 overflow-y-auto p-6 md:p-8">
             {step === 1 && (
-              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-                <div>
-                  <h4 className="text-xl font-display font-bold text-brand-dark mb-4">Select Pass</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {eventConfig.passes.map(pass => (
-                      <div 
-                        key={pass.id}
-                        onClick={() => setSelectedPass(pass)}
-                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          selectedPass.id === pass.id 
-                            ? 'border-brand-maroon bg-brand-maroon/5 shadow-md' 
-                            : 'border-brand-dark/10 hover:border-brand-maroon/30'
-                        }`}
-                      >
-                        <div className="font-bold text-brand-dark">{pass.name}</div>
-                        <div className="text-brand-maroon font-bold text-lg">₹{pass.price}</div>
-                        <div className="text-xs text-brand-dark/60 mt-1">{pass.description}</div>
-                      </div>
-                    ))}
-                  </div>
+              <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="space-y-6">
+                <div className="text-center mb-8">
+                  <h4 className="text-3xl font-display font-bold text-brand-dark">Choose Your Experience</h4>
+                  <p className="text-brand-dark/60 text-sm mt-2">Select a premium pass template to begin your journey</p>
                 </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  {eventConfig.passes.map((pass, i) => (
+                    <motion.div 
+                      whileHover={{ scale: 1.03, y: -5 }}
+                      whileTap={{ scale: 0.98 }}
+                      key={pass.id}
+                      onClick={() => { setSelectedPass(pass); setStep(2); }}
+                      className={`relative overflow-hidden rounded-3xl cursor-pointer shadow-xl border-4 transition-all ${
+                        selectedPass.id === pass.id ? 'border-brand-maroon ring-4 ring-brand-maroon/20' : 'border-transparent hover:border-brand-maroon/30'
+                      }`}
+                      style={{
+                        background: i === 0 ? 'linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%)' :
+                                    i === 1 ? 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)' :
+                                              'linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)'
+                      }}
+                    >
+                      <div className="absolute top-0 right-0 p-4 opacity-10 text-black">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                      </div>
+                      <div className="p-6 relative z-10 text-brand-dark">
+                        <div className="text-xs font-bold uppercase tracking-widest mb-3 opacity-70 bg-black/5 inline-block px-3 py-1 rounded-full">{pass.capacity} PERSON(S)</div>
+                        <div className="font-display font-bold text-3xl mb-2">{pass.name}</div>
+                        <div className="text-4xl font-black mb-4">₹{pass.price}</div>
+                        <div className="text-sm font-medium leading-relaxed opacity-90">{pass.description}</div>
+                        {pass.id === 'single' && (
+                          <div className="mt-4 text-xs font-bold bg-white/40 p-3 rounded-xl inline-block border border-white/50 text-brand-dark shadow-sm">
+                            💡 Want tickets for multiple people? Select this and increase the count in the next step!
+                          </div>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
 
+            {step === 2 && (
+              <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
+                <button onClick={() => setStep(1)} className="text-brand-maroon text-sm font-bold flex items-center gap-1 hover:underline">
+                  ← Back to templates
+                </button>
                 <div>
                   <h4 className="text-xl font-display font-bold text-brand-dark mb-4">Primary Contact Details</h4>
                   <div className="space-y-4">
@@ -357,7 +381,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               </motion.div>
             )}
 
-            {step === 2 && (
+            {step === 3 && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                 <div className="flex justify-between items-end mb-4">
                   <h4 className="text-xl font-display font-bold text-brand-dark">Attendee Details</h4>
@@ -426,7 +450,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               </motion.div>
             )}
 
-            {step === 3 && (
+            {step === 4 && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                 <h4 className="text-xl font-display font-bold text-brand-dark mb-4">Review Order</h4>
                 
@@ -473,7 +497,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               </motion.div>
             )}
 
-            {step === 4 && (
+            {step === 5 && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
                 <div className="text-center mb-6">
                   <h4 className="text-2xl font-display font-bold text-brand-dark">SECURE PAYMENT</h4>
@@ -569,7 +593,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               </motion.div>
             )}
 
-            {step === 5 && (
+            {step === 6 && (
               <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center justify-center py-6 text-center space-y-4">
                 <div className="w-16 h-16 bg-brand-maroon/10 rounded-full flex items-center justify-center text-brand-maroon mb-2">
                   <CheckCircle size={32} />
