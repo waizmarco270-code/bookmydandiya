@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { auth, db } from '../../lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { LayoutDashboard, Ticket, Users, QrCode, LogOut, FileText, IndianRupee } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -13,6 +13,7 @@ export default function AdminLayout({ children }) {
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState(null);
   const [user, setUser] = useState(null);
+  const [pendingCount, setPendingCount] = useState(0);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -62,6 +63,17 @@ export default function AdminLayout({ children }) {
     return () => unsubscribe();
   }, [router, pathname]);
 
+  useEffect(() => {
+    if (userRole !== 'ADMIN' && userRole !== 'OWNER' && userRole !== 'DEV') return;
+    
+    const q = query(collection(db, 'bookings'), where('status', '==', 'PENDING'));
+    const unsub = onSnapshot(q, (snapshot) => {
+      setPendingCount(snapshot.docs.length);
+    });
+    
+    return () => unsub();
+  }, [userRole]);
+
   if (loading) {
     return <div className="min-h-screen bg-gray-50 flex items-center justify-center font-sans">Loading Secure Backend...</div>;
   }
@@ -98,18 +110,26 @@ export default function AdminLayout({ children }) {
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const showBadge = (item.name === 'Payments' || item.name === 'Bookings') && pendingCount > 0;
             return (
               <Link 
                 key={item.name} 
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
                   isActive 
                     ? 'bg-brand-maroon text-white shadow-md font-medium' 
                     : 'text-white/70 hover:bg-white/5 hover:text-white'
                 }`}
               >
-                {item.icon}
-                <span>{item.name}</span>
+                <div className="flex items-center gap-3">
+                  {item.icon}
+                  <span>{item.name}</span>
+                </div>
+                {showBadge && (
+                  <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {pendingCount > 99 ? '99+' : pendingCount}
+                  </span>
+                )}
               </Link>
             )
           })}
@@ -140,9 +160,16 @@ export default function AdminLayout({ children }) {
           <div>
             <h2 className="font-display font-bold text-lg text-brand-gold">SARN GROUP</h2>
           </div>
-          <button onClick={handleLogout} className="p-2 text-white/70 hover:text-white">
-            <LogOut size={20} />
-          </button>
+          <div className="flex items-center gap-2">
+            {navItems.find(i => i.name === 'Tickets') && (
+              <Link href="/admin/tickets" className="p-2 text-white/70 hover:text-white relative">
+                <Ticket size={20} />
+              </Link>
+            )}
+            <button onClick={handleLogout} className="p-2 text-white/70 hover:text-white">
+              <LogOut size={20} />
+            </button>
+          </div>
         </header>
         
         <div className="flex-1 p-4 sm:p-6 lg:p-8 pb-24 md:pb-8">
@@ -151,24 +178,51 @@ export default function AdminLayout({ children }) {
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-20 flex justify-around p-2 pb-safe shadow-[0_-4px_15px_rgba(0,0,0,0.05)]">
-        {navItems.slice(0, 5).map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link 
-              key={item.name} 
-              href={item.href}
-              className={`flex flex-col items-center justify-center p-2 rounded-lg min-w-[60px] ${
-                isActive ? 'text-brand-maroon' : 'text-gray-500 hover:text-gray-900'
-              }`}
-            >
-              <div className={`${isActive ? 'bg-brand-maroon/10 p-1.5 rounded-xl' : 'p-1.5'}`}>
-                {item.icon}
-              </div>
-              <span className="text-[10px] mt-1 font-medium">{item.name}</span>
-            </Link>
-          )
-        })}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-20 shadow-[0_-4px_15px_rgba(0,0,0,0.05)] px-2">
+         <div className="flex justify-between items-center h-16 relative">
+            <div className="flex flex-1 justify-around h-full">
+               {navItems.filter(i => i.name !== 'Scanner' && i.name !== 'Tickets').slice(0, 2).map((item) => {
+                 const isActive = pathname === item.href;
+                 const showBadge = (item.name === 'Payments' || item.name === 'Bookings') && pendingCount > 0;
+                 return (
+                   <Link key={item.name} href={item.href} className={`flex flex-col items-center justify-center w-full h-full relative ${isActive ? 'text-brand-maroon' : 'text-gray-500 hover:text-gray-900'}`}>
+                     <div className="relative mb-1">
+                       {item.icon}
+                       {showBadge && <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">{pendingCount > 99 ? '99+' : pendingCount}</span>}
+                     </div>
+                     <span className="text-[10px] font-medium">{item.name}</span>
+                   </Link>
+                 )
+               })}
+            </div>
+            
+            <div className="w-16 flex-shrink-0"></div>
+
+            <div className="flex flex-1 justify-around h-full">
+               {navItems.filter(i => i.name !== 'Scanner' && i.name !== 'Tickets').slice(2).map((item) => {
+                 const isActive = pathname === item.href;
+                 const showBadge = (item.name === 'Payments' || item.name === 'Bookings') && pendingCount > 0;
+                 return (
+                   <Link key={item.name} href={item.href} className={`flex flex-col items-center justify-center w-full h-full relative ${isActive ? 'text-brand-maroon' : 'text-gray-500 hover:text-gray-900'}`}>
+                     <div className="relative mb-1">
+                       {item.icon}
+                       {showBadge && <span className="absolute -top-1.5 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">{pendingCount > 99 ? '99+' : pendingCount}</span>}
+                     </div>
+                     <span className="text-[10px] font-medium">{item.name}</span>
+                   </Link>
+                 )
+               })}
+            </div>
+
+            {navItems.find(item => item.name === 'Scanner') && (
+              <Link 
+                href="/admin/scanner"
+                className="absolute left-1/2 -translate-x-1/2 -top-6 bg-brand-maroon text-brand-gold w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_20px_rgba(90,11,26,0.4)] border-4 border-white z-30 transition-transform active:scale-95"
+              >
+                <QrCode size={24} />
+              </Link>
+            )}
+         </div>
       </nav>
     </div>
   );
