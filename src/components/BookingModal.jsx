@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle, Upload, Info, Copy, ExternalLink } from 'lucide-react';
+import { X, CheckCircle, Upload, Info, Copy, ExternalLink, User, Users, Smile } from 'lucide-react';
 import { eventConfig } from '../data/config';
 import { Button } from './ui/Button';
 import { db, auth } from '../lib/firebase';
@@ -300,7 +300,11 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                         <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${
                           selectedPass.id === pass.id ? 'bg-brand-maroon text-brand-gold' : 'bg-brand-sand text-brand-maroon'
                         } transition-colors`}>
-                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                          {pass.id === 'single' && <User size={24} />}
+                          {pass.id === 'couple' && <Users size={24} />}
+                          {pass.id === 'group' && <Users size={24} />}
+                          {pass.id === 'child' && <Smile size={24} />}
+                          {!['single', 'couple', 'group', 'child'].includes(pass.id) && <User size={24} />}
                         </div>
                         <div>
                           <div className="text-xs font-bold uppercase tracking-widest text-brand-maroon/70 mb-1">{pass.capacity} PERSON(S)</div>
