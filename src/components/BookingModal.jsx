@@ -284,36 +284,47 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                   <h4 className="text-3xl font-display font-bold text-brand-dark">Choose Your Experience</h4>
                   <p className="text-brand-dark/60 text-sm mt-2">Select a premium pass template to begin your journey</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div className="flex flex-col gap-4">
                   {eventConfig.passes.map((pass, i) => (
                     <motion.div 
-                      whileHover={{ scale: 1.03, y: -5 }}
+                      whileHover={{ scale: 1.02, y: -2 }}
                       whileTap={{ scale: 0.98 }}
                       key={pass.id}
                       onClick={() => { setSelectedPass(pass); setStep(2); }}
-                      className={`relative overflow-hidden rounded-3xl cursor-pointer shadow-xl border-4 transition-all ${
-                        selectedPass.id === pass.id ? 'border-brand-maroon ring-4 ring-brand-maroon/20' : 'border-transparent hover:border-brand-maroon/30'
+                      className={`relative overflow-hidden rounded-2xl cursor-pointer bg-white border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 ${
+                        selectedPass.id === pass.id ? 'border-brand-maroon shadow-lg shadow-brand-maroon/10' : 'border-brand-dark/10 hover:border-brand-maroon/50 shadow-sm'
                       }`}
-                      style={{
-                        background: i === 0 ? 'linear-gradient(135deg, #FF9A9E 0%, #FECFEF 99%, #FECFEF 100%)' :
-                                    i === 1 ? 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)' :
-                                              'linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%)'
-                      }}
                     >
-                      <div className="absolute top-0 right-0 p-4 opacity-10 text-black">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                      {/* Left Side: Icon & Details */}
+                      <div className="flex items-center gap-5">
+                        <div className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 ${
+                          selectedPass.id === pass.id ? 'bg-brand-maroon text-brand-gold' : 'bg-brand-sand text-brand-maroon'
+                        } transition-colors`}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        </div>
+                        <div>
+                          <div className="text-xs font-bold uppercase tracking-widest text-brand-maroon/70 mb-1">{pass.capacity} PERSON(S)</div>
+                          <div className="font-display font-bold text-2xl text-brand-dark mb-1">{pass.name}</div>
+                          <div className="text-sm font-medium text-brand-dark/60">{pass.description}</div>
+                        </div>
                       </div>
-                      <div className="p-6 relative z-10 text-brand-dark">
-                        <div className="text-xs font-bold uppercase tracking-widest mb-3 opacity-70 bg-black/5 inline-block px-3 py-1 rounded-full">{pass.capacity} PERSON(S)</div>
-                        <div className="font-display font-bold text-3xl mb-2">{pass.name}</div>
-                        <div className="text-4xl font-black mb-4">₹{pass.price}</div>
-                        <div className="text-sm font-medium leading-relaxed opacity-90">{pass.description}</div>
+                      
+                      {/* Right Side: Price */}
+                      <div className="mt-4 sm:mt-0 sm:text-right w-full sm:w-auto flex items-center justify-between sm:block border-t sm:border-t-0 border-brand-dark/10 pt-4 sm:pt-0">
+                        <div className="text-3xl font-black text-brand-maroon">₹{pass.price}</div>
                         {pass.id === 'single' && (
-                          <div className="mt-4 text-xs font-bold bg-white/40 p-3 rounded-xl inline-block border border-white/50 text-brand-dark shadow-sm">
-                            💡 Want tickets for multiple people? Select this and increase the count in the next step!
+                          <div className="sm:hidden text-[10px] font-bold bg-brand-sand px-2 py-1 rounded text-brand-dark mt-1">
+                            + ADD MORE LATER
                           </div>
                         )}
                       </div>
+
+                      {/* Desktop Hint */}
+                      {pass.id === 'single' && (
+                        <div className="hidden sm:block absolute top-3 right-3 text-[10px] font-bold bg-brand-sand px-3 py-1.5 rounded-full text-brand-maroon/80 border border-brand-maroon/10">
+                          💡 You can add more tickets in the next step
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </div>
