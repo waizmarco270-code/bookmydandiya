@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Code2, ExternalLink, Instagram, Mail, MessageCircle, X, CheckCircle, ShieldCheck } from 'lucide-react';
+import { Code2, ExternalLink, Camera, Mail, MessageCircle, X, CheckCircle, ShieldCheck } from 'lucide-react';
 import { Card } from './ui/Card';
 
 export function DeveloperSignature() {
@@ -77,7 +77,7 @@ export function DeveloperSignature() {
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 bg-pink-500/10 hover:bg-pink-500/20 border border-pink-500/20 text-pink-400 py-3 px-4 rounded-xl text-sm font-bold transition-all hover:scale-105"
                 >
-                  <Instagram size={18} /> Instagram
+                  <Camera size={18} /> Instagram
                 </a>
 
                 <a 
