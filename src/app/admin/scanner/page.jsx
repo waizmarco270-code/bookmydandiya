@@ -208,7 +208,7 @@ export default function ScannerPage() {
 
   return (
     <div 
-      className="min-h-screen bg-black text-white font-sans flex flex-col transition-colors duration-300"
+      className="flex-1 w-full bg-black text-white font-sans flex flex-col transition-colors duration-300 rounded-2xl overflow-hidden shadow-2xl"
       style={{ backgroundColor: flashColor === 'transparent' ? '#000' : flashColor }}
     >
       {/* Header */}
