@@ -1,5 +1,6 @@
 import React from 'react';
 import { eventConfig } from '../data/config';
+import { DeveloperSignature } from './DeveloperSignature';
 
 export const Footer = () => {
   return (
@@ -46,10 +47,13 @@ export const Footer = () => {
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-brand-sand/50">
           <p>&copy; {new Date().getFullYear()} SARN Group. All rights reserved.</p>
-          <p className="italic font-display text-brand-sand/70 text-sm">"Celebrating music, culture & togetherness."</p>
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-brand-gold transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-brand-gold transition-colors">Terms of Service</a>
+          <p className="italic font-display text-brand-sand/70 text-sm hidden md:block">"Celebrating music, culture & togetherness."</p>
+          <div className="flex flex-col items-center md:items-end">
+            <div className="flex gap-4 mb-2 md:mb-0">
+              <a href="#" className="hover:text-brand-gold transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-brand-gold transition-colors">Terms of Service</a>
+            </div>
+            <DeveloperSignature />
           </div>
         </div>
       </div>
