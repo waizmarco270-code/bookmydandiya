@@ -5,6 +5,7 @@ import { eventConfig } from '../data/config';
 import { Button } from './ui/Button';
 import { db, auth } from '../lib/firebase';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { signInAnonymously } from 'firebase/auth';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
 export const BookingModal = ({ isOpen, onClose, initialPass }) => {
@@ -219,6 +220,16 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
     setIsSubmitting(true);
     
     try {
+      let currentUid = auth.currentUser?.uid;
+      if (!currentUid) {
+        try {
+          const userCred = await signInAnonymously(auth);
+          currentUid = userCred.user.uid;
+        } catch (authError) {
+          console.error("Failed to sign in anonymously", authError);
+        }
+      }
+
       const refId = `SDR-${Math.floor(100000 + Math.random() * 900000)}`;
       setBookingRef(refId);
 
@@ -248,7 +259,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
         entriesAllowed,
         entriesUsed: 0,
         entriesRemaining: entriesAllowed,
-        uid: auth.currentUser?.uid || null,
+        uid: currentUid || null,
         createdAt: serverTimestamp()
       });
 
