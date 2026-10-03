@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle, Upload, Info, Copy, ExternalLink, User, Users, Smile } from 'lucide-react';
+import { X, CheckCircle, Upload, Info, Copy, ExternalLink, User, Users, Smile, AlertTriangle } from 'lucide-react';
 import { eventConfig } from '../data/config';
 import { Button } from './ui/Button';
 import { db, auth } from '../lib/firebase';
@@ -19,6 +19,8 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
   const [upiConfig, setUpiConfig] = useState(null);
   const [livePricing, setLivePricing] = useState(null);
   const [loadingConfig, setLoadingConfig] = useState(true);
+  const [confirmGenuine, setConfirmGenuine] = useState(false);
+  const [confirmNoFake, setConfirmNoFake] = useState(false);
 
   // Fetch payment configuration from DEV panel settings
   useEffect(() => {
@@ -606,9 +608,48 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                         Continue to Pay via UPI App
                       </button>
                       
+                      <div className="bg-orange-50/80 border border-orange-200 rounded-xl p-4 text-left space-y-4 mb-2 shadow-sm">
+                        <label className="flex items-start gap-3 cursor-pointer group">
+                          <div className="mt-0.5 relative flex items-center justify-center shrink-0">
+                            <input 
+                              type="checkbox" 
+                              className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
+                              checked={confirmGenuine}
+                              onChange={(e) => setConfirmGenuine(e.target.checked)}
+                            />
+                            <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
+                          </div>
+                          <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
+                            I have genuinely completed the payment of ₹{totalAmount}.
+                          </span>
+                        </label>
+                        
+                        <label className="flex items-start gap-3 cursor-pointer group">
+                          <div className="mt-0.5 relative flex items-center justify-center shrink-0">
+                            <input 
+                              type="checkbox" 
+                              className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
+                              checked={confirmNoFake}
+                              onChange={(e) => setConfirmNoFake(e.target.checked)}
+                            />
+                            <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
+                          </div>
+                          <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
+                            I am submitting a real payment.
+                          </span>
+                        </label>
+                        
+                        <div className="flex items-start gap-2 bg-red-100 p-3 rounded-lg border border-red-200 mt-2">
+                          <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={16} />
+                          <p className="text-xs text-red-700 leading-tight">
+                            <strong>Warning:</strong> Submitting fake payments will result in a permanent ban from this and future events.
+                          </p>
+                        </div>
+                      </div>
+
                       <Button 
                         onClick={handleSubmitPayment}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || !confirmGenuine || !confirmNoFake}
                         className="w-full"
                       >
                         {isSubmitting ? 'Processing...' : 'I have completed the payment'}
