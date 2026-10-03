@@ -225,7 +225,7 @@ export default function ScannerPage() {
         )}
       </div>
 
-      <div className="flex-1 flex flex-col relative">
+      <div className="flex-1 flex flex-col relative overflow-y-auto pb-4">
         
         {/* Scanner Viewport (Only visible when IDLE) */}
         <div className={`flex-1 flex flex-col items-center justify-center ${scanStatus !== 'IDLE' ? 'hidden' : ''}`}>
@@ -292,7 +292,7 @@ export default function ScannerPage() {
 
         {/* Valid Ticket View - Entry Confirmation */}
         {scanStatus === 'VALID' && ticketData && (
-          <div className="flex-1 flex flex-col p-4 md:p-8 max-w-md mx-auto w-full">
+          <div className="flex flex-col p-4 md:p-8 pb-10 max-w-md mx-auto w-full">
             <div className="text-center mb-6">
               <CheckCircle2 size={64} className="text-green-500 mx-auto mb-4 drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]" />
               <h2 className="text-3xl font-bold text-green-500 tracking-wider">VALID TICKET</h2>
