@@ -21,6 +21,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
   const [loadingConfig, setLoadingConfig] = useState(true);
   const [confirmGenuine, setConfirmGenuine] = useState(false);
   const [confirmNoFake, setConfirmNoFake] = useState(false);
+  const [showPaymentConfirm, setShowPaymentConfirm] = useState(false);
 
   // Fetch payment configuration from DEV panel settings
   useEffect(() => {
@@ -573,49 +574,9 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                       >
                         Continue to Pay via UPI App
                       </button>
-                      
-                      <div className="bg-orange-50/80 border border-orange-200 rounded-xl p-4 text-left space-y-4 mb-2 shadow-sm">
-                        <label className="flex items-start gap-3 cursor-pointer group">
-                          <div className="mt-0.5 relative flex items-center justify-center shrink-0">
-                            <input 
-                              type="checkbox" 
-                              className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
-                              checked={confirmGenuine}
-                              onChange={(e) => setConfirmGenuine(e.target.checked)}
-                            />
-                            <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
-                          </div>
-                          <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
-                            I have genuinely completed the payment of ₹{totalAmount}.
-                          </span>
-                        </label>
-                        
-                        <label className="flex items-start gap-3 cursor-pointer group">
-                          <div className="mt-0.5 relative flex items-center justify-center shrink-0">
-                            <input 
-                              type="checkbox" 
-                              className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
-                              checked={confirmNoFake}
-                              onChange={(e) => setConfirmNoFake(e.target.checked)}
-                            />
-                            <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
-                          </div>
-                          <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
-                            I am submitting a real payment.
-                          </span>
-                        </label>
-                        
-                        <div className="flex items-start gap-2 bg-red-100 p-3 rounded-lg border border-red-200 mt-2">
-                          <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={16} />
-                          <p className="text-xs text-red-700 leading-tight">
-                            <strong>Warning:</strong> Submitting fake payments will result in a permanent ban from this and future events.
-                          </p>
-                        </div>
-                      </div>
-
                       <Button 
-                        onClick={handleSubmitPayment}
-                        disabled={isSubmitting || !confirmGenuine || !confirmNoFake}
+                        onClick={() => setShowPaymentConfirm(true)}
+                        disabled={isSubmitting}
                         className="w-full"
                       >
                         {isSubmitting ? 'Processing...' : 'I have completed the payment'}
@@ -722,6 +683,85 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               </Button>
             </div>
           )}
+
+          {/* Payment Confirmation Popup */}
+          <AnimatePresence>
+            {showPaymentConfirm && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+              >
+                <motion.div 
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="bg-white rounded-3xl p-6 shadow-2xl max-w-sm w-full border border-brand-maroon/20"
+                >
+                  <h4 className="text-xl font-display font-bold text-brand-dark mb-4 text-center">Confirm Payment</h4>
+                  
+                  <div className="bg-orange-50/80 border border-orange-200 rounded-xl p-4 text-left space-y-4 mb-6 shadow-sm">
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <div className="mt-0.5 relative flex items-center justify-center shrink-0">
+                        <input 
+                          type="checkbox" 
+                          className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
+                          checked={confirmGenuine}
+                          onChange={(e) => setConfirmGenuine(e.target.checked)}
+                        />
+                        <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
+                      </div>
+                      <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
+                        I have genuinely completed the payment of ₹{totalAmount}.
+                      </span>
+                    </label>
+                    
+                    <label className="flex items-start gap-3 cursor-pointer group">
+                      <div className="mt-0.5 relative flex items-center justify-center shrink-0">
+                        <input 
+                          type="checkbox" 
+                          className="peer appearance-none w-5 h-5 border-2 border-brand-maroon/30 rounded bg-white checked:bg-brand-maroon checked:border-brand-maroon transition-colors cursor-pointer"
+                          checked={confirmNoFake}
+                          onChange={(e) => setConfirmNoFake(e.target.checked)}
+                        />
+                        <CheckCircle size={14} className="absolute text-white opacity-0 peer-checked:opacity-100 pointer-events-none" strokeWidth={3} />
+                      </div>
+                      <span className="text-sm font-medium text-brand-dark group-hover:text-brand-maroon transition-colors select-none leading-tight">
+                        I am submitting a real payment screenshot.
+                      </span>
+                    </label>
+                    
+                    <div className="flex items-start gap-2 bg-red-100 p-3 rounded-lg border border-red-200 mt-2">
+                      <AlertTriangle className="text-red-600 shrink-0 mt-0.5" size={16} />
+                      <p className="text-xs text-red-700 leading-tight">
+                        <strong>Warning:</strong> Submitting fake payments will result in a permanent ban from this and future events.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => setShowPaymentConfirm(false)}
+                      className="flex-1 py-3 rounded-xl border border-brand-dark/20 font-bold text-brand-dark hover:bg-gray-50 transition-colors text-sm"
+                    >
+                      Cancel
+                    </button>
+                    <Button 
+                      onClick={() => {
+                        setShowPaymentConfirm(false);
+                        handleSubmitPayment();
+                      }}
+                      disabled={isSubmitting || !confirmGenuine || !confirmNoFake}
+                      className="flex-1 text-sm"
+                    >
+                      Submit Booking
+                    </Button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </div>
     </AnimatePresence>
