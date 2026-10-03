@@ -59,59 +59,27 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
     fetchConfig();
   }, [isOpen]);
 
-  // Update selected pass if initialPass changes, but only if no active session
+  // Update selected pass if initialPass changes
   useEffect(() => {
-    if (initialPass && !localStorage.getItem('bookingSession')) {
+    if (initialPass) {
       setSelectedPass(initialPass);
     }
   }, [initialPass]);
 
-  // Session Restore & Initialization
+  // Reset attendees when pass changes or modal opens
   useEffect(() => {
     if (isOpen) {
-      const session = localStorage.getItem('bookingSession');
-      if (session) {
-        try {
-          const parsed = JSON.parse(session);
-          if (parsed.step > 1 && parsed.step <= 5) {
-            setStep(parsed.step);
-            setSelectedPass(parsed.selectedPass);
-            setPrimaryDetails(parsed.primaryDetails);
-            setAttendees(parsed.attendees);
-            return; // Skip standard init if restoring
-          }
-        } catch (e) {
-          console.error("Session restore failed", e);
-        }
-      }
-      
-      // Standard initialization if no active session
+      // Initialize attendees array based on pass capacity
       const initialAttendees = Array(selectedPass.capacity).fill(null).map(() => ({
         name: '', age: '', gender: 'Male', type: 'Adult'
       }));
       setAttendees(initialAttendees);
-      setStep(1);
     }
-  }, [isOpen, selectedPass.capacity]);
+  }, [selectedPass, isOpen]);
 
-  // Session Save
+  // Reset entirely when closed
   useEffect(() => {
-    if (isOpen && step > 1 && step < 6) {
-      localStorage.setItem('bookingSession', JSON.stringify({
-        step,
-        selectedPass,
-        primaryDetails,
-        attendees
-      }));
-    } else if (step === 6) {
-      localStorage.removeItem('bookingSession'); // Clear on success
-    }
-  }, [isOpen, step, selectedPass, primaryDetails, attendees]);
-
-  // Handle manual clearing when user explicitly cancels on step 1 or finishes
-  const handleModalClose = () => {
-    if (step === 1 || step === 6) {
-      localStorage.removeItem('bookingSession');
+    if (!isOpen) {
       setTimeout(() => {
         setStep(1);
         setPrimaryDetails({ name: '', phone: '', address: '', countryCode: '+91' });
@@ -119,9 +87,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
         setBookingRef('');
       }, 300);
     }
-    onClose();
-  };
-
+  }, [isOpen]);
   if (!isOpen) return null;
 
   const calculateTotal = () => {
@@ -294,7 +260,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={handleModalClose}
+          onClick={onClose}
           className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         />
         
@@ -311,7 +277,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
               <p className="text-brand-sand/70 text-sm">Step {step > 5 ? 5 : step} of 5</p>
             </div>
             <button 
-              onClick={handleModalClose}
+              onClick={onClose}
               className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
             >
               <X size={20} />
@@ -735,7 +701,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
           {step < 5 && (
             <div className="bg-white p-4 md:px-8 border-t border-brand-dark/10 flex justify-between items-center shrink-0">
               <button 
-                onClick={() => step > 1 ? setStep(step - 1) : handleModalClose()}
+                onClick={() => step > 1 ? setStep(step - 1) : onClose()}
                 className="px-6 py-2 text-brand-dark/70 font-medium hover:text-brand-dark transition-colors"
               >
                 {step > 1 ? 'Back' : 'Cancel'}
@@ -751,7 +717,7 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
           
           {step === 5 && (
             <div className="bg-white p-4 md:px-8 border-t border-brand-dark/10 flex justify-center shrink-0">
-              <Button onClick={handleModalClose} className="w-full sm:w-auto">
+              <Button onClick={onClose} className="w-full sm:w-auto">
                 Close & Return to Home
               </Button>
             </div>
