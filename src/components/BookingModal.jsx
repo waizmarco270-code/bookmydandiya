@@ -660,9 +660,9 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
                 {step > 1 ? 'Back' : 'Cancel'}
               </button>
               
-              {step < 4 && (
+              {step < 5 && (
                 <Button onClick={handleNextStep}>
-                  {step === 3 ? 'Proceed to Pay' : 'Next Step'}
+                  {step === 4 ? 'Proceed to Pay' : step === 3 ? 'Review Order' : 'Next Step'}
                 </Button>
               )}
             </div>
