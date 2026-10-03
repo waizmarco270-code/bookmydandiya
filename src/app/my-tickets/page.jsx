@@ -18,16 +18,42 @@ export default function MyTicketsPage() {
       if (currentUser) {
         setUser(currentUser);
         try {
-          const q = query(
-            collection(db, 'bookings'), 
-            where('uid', '==', currentUser.uid)
-          );
-          const snapshot = await getDocs(q);
-          const userTickets = [];
-          
-          snapshot.forEach(doc => {
-            userTickets.push({ id: doc.id, ...doc.data() });
-          });
+          let userTicketsMap = new Map();
+
+          // Fetch by UID
+          if (currentUser && currentUser.uid) {
+            const q = query(
+              collection(db, 'bookings'), 
+              where('uid', '==', currentUser.uid)
+            );
+            const snapshot = await getDocs(q);
+            snapshot.forEach(doc => {
+              userTicketsMap.set(doc.id, { id: doc.id, ...doc.data() });
+            });
+          }
+
+          // Fetch by localStorage bookingRefs (Fallback if UID changed, e.g. Admin login)
+          try {
+            const storedBookings = JSON.parse(localStorage.getItem('myBookings') || '[]');
+            if (storedBookings.length > 0) {
+              // Firestore 'in' queries support max 10 items
+              for (let i = 0; i < storedBookings.length; i += 10) {
+                const chunk = storedBookings.slice(i, i + 10);
+                const qRef = query(
+                  collection(db, 'bookings'), 
+                  where('bookingRef', 'in', chunk)
+                );
+                const snapRef = await getDocs(qRef);
+                snapRef.forEach(doc => {
+                  userTicketsMap.set(doc.id, { id: doc.id, ...doc.data() });
+                });
+              }
+            }
+          } catch(e) {
+            console.error("Error fetching local storage bookings", e);
+          }
+
+          const userTickets = Array.from(userTicketsMap.values());
           
           // Sort by creation date client-side to avoid needing a composite index
           userTickets.sort((a, b) => b.createdAt?.toMillis() - a.createdAt?.toMillis());

@@ -232,6 +232,15 @@ export const BookingModal = ({ isOpen, onClose, initialPass }) => {
         createdAt: serverTimestamp()
       });
 
+      // Save bookingRef to localStorage for robust tracking (in case of anonymous auth loss)
+      try {
+        const storedBookings = JSON.parse(localStorage.getItem('myBookings') || '[]');
+        storedBookings.push(refId);
+        localStorage.setItem('myBookings', JSON.stringify(storedBookings));
+      } catch (e) {
+        console.error("Failed to save booking to localStorage", e);
+      }
+
       setPaymentStatus('SUBMITTED');
       setStep(6);
     } catch (error) {
